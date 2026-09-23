@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Proposal — Redistricting Timing &amp; Partisan Bias</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#241b2e;
+    --muted:#6b6478;
+    --violet:#7b2ff7;
+    --line:#1a1620;
+    --paper:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+  }
+  .display{
+    font-family:'Anton', sans-serif;
+    font-weight:400;
+    text-transform:uppercase;
+    line-height:0.92;
+    letter-spacing:-0.01em;
+  }
+
+  /* ---- Dot grid decoration ---- */
+  .dots{
+    width:72px; height:56px;
+    background-image:radial-gradient(var(--ink) 1.6px, transparent 1.6px);
+    background-size:9px 9px;
+  }
+
+  /* ---- Chrome liquid blob (SVG) ---- */
+  .blob-wrap{ position:absolute; z-index:0; pointer-events:none; }
+  .blob-wrap svg{ display:block; }
+
+  nav{
+    position:sticky; top:0; z-index:40;
+    background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid #ece7f5;
+    padding:16px 40px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  nav .brand{ font-family:'Anton', sans-serif; font-size:1rem; letter-spacing:0.02em; }
+  nav .links{ display:flex; gap:20px; flex-wrap:wrap; }
+  nav .links a{
+    font-size:0.74rem; font-weight:600; text-transform:uppercase; letter-spacing:0.04em;
+    color:var(--muted); text-decoration:none;
+  }
+  nav .links a:hover{ color:var(--violet); }
+
+  section{
+    position:relative;
+    max-width:820px;
+    margin:0 auto;
+    padding:110px 32px 70px;
+    scroll-margin-top:70px;
+    overflow:hidden;
+  }
+
+  /* ---- Hero ---- */
+  .hero{
+    min-height:88vh;
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+    text-align:center;
+    max-width:100%;
+    padding-top:60px;
+  }
+  .hero .dots{ position:absolute; top:40px; left:40px; }
+  .hero .dots.br{ position:absolute; top:60px; right:48px; left:auto; }
+  .frame{
+    border:1.5px solid var(--violet);
+    padding:34px 46px;
+    display:inline-block;
+    position:relative;
+    z-index:2;
+  }
+  h1.title{ font-size:4.4rem; margin:0; }
+  .presented{ font-weight:700; font-size:1.05rem; margin-top:22px; position:relative; z-index:2; }
+  .rule{ height:1px; background:var(--line); width:100%; margin:44px 0 18px; }
+  .footrow{
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    font-size:0.8rem; font-weight:600; width:100%;
+  }
+
+  /* ---- Section headers ---- */
+  h2.sec{
+    font-size:2.1rem;
+    margin:0 0 30px;
+  }
+  h3{
+    font-family:'Inter', sans-serif;
+    font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em;
+    color:var(--violet); margin:26px 0 10px;
+  }
+  p{ margin:0 0 14px; }
+
+  .rq-box{
+    border:1.5px solid var(--violet);
+    padding:26px 30px;
+    font-size:1.25rem; font-weight:600;
+    line-height:1.4;
+    margin-bottom:10px;
+  }
+
+  .pill-row{ display:flex; gap:8px; flex-wrap:wrap; margin:16px 0; }
+  .pill{
+    font-size:0.74rem; font-weight:700; text-transform:uppercase; letter-spacing:0.03em;
+    padding:8px 16px; border:1.5px solid var(--line);
+  }
+  .pill.on{ background:var(--ink); color:#fff; border-color:var(--ink); }
+
+  .src{
+    border-left:3px solid var(--violet);
+    padding:6px 0 6px 18px;
+    margin-bottom:18px;
+  }
+  .src .cite{ font-weight:700; }
+  .src .venue{
+    font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;
+    color:var(--muted); margin-bottom:6px;
+  }
+  .src p{ margin:0; font-size:0.95rem; }
+
+  .mech{
+    display:flex; flex-wrap:wrap; gap:8px; align-items:center;
+    padding:20px; border:1px solid #ece7f5; margin:18px 0;
+  }
+  .mech .step{
+    font-size:0.82rem; font-weight:600;
+    border:1px solid var(--line); padding:7px 12px;
+  }
+  .mech .arrow{ color:var(--violet); font-weight:700; }
+
+  .hyp{
+    background:var(--ink); color:#fff;
+    font-family:'Anton', sans-serif; text-transform:none;
+    font-size:1.6rem; text-align:center;
+    padding:26px; margin:20px 0 8px;
+  }
+  .hyp-note{ font-size:0.78rem; color:var(--muted); text-align:center; }
+
+  .lim{ list-style:none; padding:0; margin:0; }
+  .lim li{
+    padding:16px 0; border-bottom:1px solid #ece7f5;
+  }
+  .lim li:last-child{ border-bottom:none; }
+  .lim strong{ display:block; margin-bottom:4px; }
+
+  .split{ display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--line); margin-top:10px;}
+  @media(max-width:600px){ .split{ grid-template-columns:1fr; } }
+  .split .box{ padding:22px; }
+  .split .box:first-child{ border-right:1px solid var(--line); }
+  @media(max-width:600px){ .split .box:first-child{ border-right:none; border-bottom:1px solid var(--line);} }
+  .split h4{
+    font-family:'Inter', sans-serif; font-size:0.72rem; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.05em; color:var(--violet); margin:0 0 10px;
+  }
+  .split ul{ margin:0; padding-left:18px; font-size:0.92rem; }
+  .split li{ margin-bottom:8px; }
+
+  .ai-box{ border:1px solid var(--line); padding:22px 26px; font-size:0.96rem; }
+
+  footer{
+    text-align:center; padding:50px 32px 90px;
+    font-size:0.78rem; color:var(--muted); font-weight:600;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">PROJECT PROPOSAL</span>
+  <div class="links">
+    <a href="#ai">AI</a>
+    <a href="#rq">Question</a>
+    <a href="#position">Positioning</a>
+    <a href="#contribution">Contribution</a>
+    <a href="#litreview">Literature</a>
+    <a href="#theory">Theory</a>
+    <a href="#limits">Limits</a>
+    <a href="#reflection">Reflection</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <span class="dots"></span>
+  <span class="dots br"></span>
+
+  <div class="blob-wrap" style="top:-60px; left:-160px; width:520px;">
+    <svg width="520" height="420" viewBox="0 0 520 420">
+      <defs>
+        <linearGradient id="chrome1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#f3d9e6"/>
+          <stop offset="35%" stop-color="#d8c7f0"/>
+          <stop offset="60%" stop-color="#bcd4ef"/>
+          <stop offset="100%" stop-color="#e8e3f7"/>
+        </linearGradient>
+      </defs>
+      <path fill="url(#chrome1)" opacity="0.85" d="M60,120 C10,180 30,260 90,300 C150,340 180,260 240,270 C300,280 300,360 370,340 C440,320 430,220 380,170 C330,120 340,60 280,50 C220,40 210,100 160,90 C110,80 110,60 60,120 Z"/>
+    </svg>
+  </div>
+  <div class="blob-wrap" style="bottom:-100px; right:-180px; width:560px;">
+    <svg width="560" height="440" viewBox="0 0 560 440">
+      <defs>
+        <linearGradient id="chrome2" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%" stop-color="#e8e3f7"/>
+          <stop offset="40%" stop-color="#f0d6e4"/>
+          <stop offset="70%" stop-color="#c9d8f0"/>
+          <stop offset="100%" stop-color="#eee8fb"/>
+        </linearGradient>
+      </defs>
+      <path fill="url(#chrome2)" opacity="0.85" d="M80,140 C30,200 50,290 120,320 C190,350 210,270 280,280 C350,290 350,380 430,360 C510,340 500,230 450,180 C400,130 410,60 340,50 C270,40 260,110 200,100 C140,90 130,80 80,140 Z"/>
+    </svg>
+  </div>
+
+  <div class="frame">
+    <h1 class="title display">Project<br>Proposal</h1>
+  </div>
+  <div class="presented">Redistricting Timing &amp; Partisan Bias &nbsp;·&nbsp; PLS 210</div>
+
+  <div class="rule"></div>
+  <div class="footrow">
+    <span>planscore.org</span>
+    <span>PLS 210 — The Hypothesis Lab</span>
+    <span>Fall 2026</span>
+  </div>
+</section>
+
+<section id="ai">
+  <h2 class="sec display">AI Transparency</h2>
+  <div class="ai-box">
+    <p style="margin:0;">I used Claude throughout this project — to sharpen my research question, trace my theory to an actual citation, and give feedback and critique at every stage. It did not choose my sources, invent data, or write my argument. The mechanism is mine; verifying my final data is still mine to do, pulled directly from PlanScore.</p>
+  </div>
+</section>
+
+<section id="rq">
+  <h2 class="sec display">Research Question</h2>
+  <p class="rq-box">Does the timing of redistricting — decennial versus mid-decade — predict the degree of partisan bias in U.S. congressional maps drawn between 2011 and 2026?</p>
+
+  <h3>Independent Variable</h3>
+  <p>Redistricting timing — binary. <strong>0 = decennial</strong> (2011, 2021 cycles). <strong>1 = mid-decade</strong> (2025–26 wave).</p>
+
+  <h3>Dependent Variable</h3>
+  <p>Partisan bias, measured as the absolute value of the efficiency gap — a percentage, signed toward either party (D or R) before conversion to absolute value. Theoretically unbounded; empirically observed from 0% up to roughly 20–25% in the most extreme real-world cases.</p>
+
+  <h3>Why 2011</h3>
+  <p>The first congressional maps drawn after the 2010 Census — the normal, on-schedule decennial cycle, and the earliest point where modern efficiency-gap data is reliably available.</p>
+</section>
+
+<section id="position">
+  <h2 class="sec display">Positioning</h2>
+  <div class="pill-row">
+    <span class="pill on">Positivist</span>
+    <span class="pill">Interpretivist</span>
+    <span class="pill">Descriptive</span>
+  </div>
+  <p>This project follows a positivist epistemology: it treats partisan bias as an objectively measurable outcome, tests a falsifiable, directional hypothesis derived deductively from theory before data collection, rather than allowing the question to evolve through fieldwork.</p>
+</section>
+
+<section id="contribution">
+  <h2 class="sec display">Contribution</h2>
+  <p>Researchers have studied how redistricting <em>institutions</em> affect partisan bias, but they have not studied whether redistricting <em>timing</em> does too — a question that couldn't be tested until the 2025–26 mid-decade wave produced the first real cases.</p>
+  <h3>The Gap</h3>
+  <p style="margin-bottom:0;">No peer-reviewed source yet tests redistricting timing against partisan bias outcomes using the 2025–26 mid-decade cases. This absence reflects publication timing, not a lack of scholarly interest — the phenomenon itself is new.</p>
+</section>
+
+<section id="litreview">
+  <h2 class="sec display">Literature Review</h2>
+
+  <h3>Consensus</h3>
+  <div class="src">
+    <div class="cite">McCartan, Kenny, Simko, Ebowe, Zhao &amp; Imai (2026)</div>
+    <div class="venue">American Political Science Review</div>
+    <p>Diff-in-diff design across the 2010/2020 cycles; institutional constraints on partisan actors reduce bias, and constraint design matters.</p>
+  </div>
+  <div class="src">
+    <div class="cite">"Independent Redistricting Commissions Are Associated with More Competitive Elections"</div>
+    <div class="venue">PS: Political Science &amp; Politics</div>
+    <p>Peer-reviewed APSA journal; commissions correlate with more competitive districts.</p>
+  </div>
+
+  <h3>Debate</h3>
+  <div class="src">
+    <div class="cite">"A Retrospective on Redistricting Practices and Electoral Competition in U.S. Elections" (2025)</div>
+    <div class="venue">State Politics &amp; Policy Quarterly</div>
+    <p>Synthesizes the optimist/skeptic split on how much commission design actually matters.</p>
+  </div>
+  <div class="src">
+    <div class="cite">McGhee (2014), "Measuring Partisan Bias in Single-Member District Electoral Systems"</div>
+    <div class="venue">Legislative Studies Quarterly</div>
+    <p>Refines how partisan bias should be measured; finds effects of party control on bias are small and decay rapidly — a genuinely contrary finding, live scholarly disagreement.</p>
+  </div>
+
+  <h3>Theoretical Mechanism</h3>
+  <div class="src">
+    <div class="cite">Owen &amp; Grofman (1988), "Optimal Partisan Gerrymandering"</div>
+    <div class="venue">Political Geography Quarterly</div>
+    <p>Foundational theory: uncertainty about future voter behavior constrains how aggressively a rational party optimizes a gerrymander.</p>
+  </div>
+</section>
+
+<section id="theory">
+  <h2 class="sec display">Theory &amp; Hypothesis</h2>
+
+  <p>Because uncertainty about shifting political tides normally keeps gerrymanders moderate (Owen and Grofman 1988), and mid-decade redistricting reduces that uncertainty by letting a party optimize against more recently observed election results over a shorter risk horizon, mid-decade maps should show higher partisan bias than maps drawn on the regular decennial schedule.</p>
+
+  <div class="mech">
+    <span class="step">Mid-decade timing</span>
+    <span class="arrow">&rarr;</span>
+    <span class="step">More recent election data</span>
+    <span class="arrow">&rarr;</span>
+    <span class="step">Less uncertainty</span>
+    <span class="arrow">&rarr;</span>
+    <span class="step">More aggressive optimization</span>
+    <span class="arrow">&rarr;</span>
+    <span class="step">Higher bias</span>
+  </div>
+
+  <div class="hyp">+ |Partisan bias| &larr; + Mid-decade timing</div>
+  <p class="hyp-note">Coded: 0 = decennial, 1 = mid-decade. DV = |efficiency gap|.</p>
+</section>
+
+<section id="limits">
+  <h2 class="sec display">Limitations</h2>
+  <ul class="lim">
+    <li><strong>Small treatment group.</strong> Roughly n=4–6 mid-decade cases exist, because voluntary mid-decade redistricting was almost nonexistent before 2025 — a direct consequence of the gap this project addresses, not a design flaw.</li>
+    <li><strong>Projected, not observed, mid-decade scores.</strong> 2026 efficiency gap figures are model-based projections built from real historical votes applied to new district lines, since the 2026 election hasn't occurred yet.</li>
+    <li><strong>Mixed case motivations.</strong> A few 2025–26 states redrew under court order rather than pure partisan discretion; these remain in the sample for simplicity, though the mechanism applies most cleanly to voluntary redraws.</li>
+  </ul>
+</section>
+
+<section id="reflection">
+  <h2 class="sec display">Reflection</h2>
+  <p class="hyp-note" style="text-align:left; margin-bottom:6px;">Ungraded — shows my thinking, not my grade.</p>
+  <div class="split">
+    <div class="box">
+      <h4>Helped Me See</h4>
+      <ul>
+        <li>A "gap" needs a reason it exists, not just that no one's done it.</li>
+        <li>A hypothesis and its theory are separate — no "because" belongs in the hypothesis.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Still Unsure</h4>
+      <ul>
+        <li>What my t-test result will actually mean once I run it.</li>
+        <li>Whether including the court-mandated states quietly weakens the mechanism I'm claiming.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>PLS 210 — Built with Claude, hosted on GitHub Pages.</footer>
+
+</body>
+</html>
